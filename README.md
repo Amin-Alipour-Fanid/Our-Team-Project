@@ -1,105 +1,95 @@
 # Real-time Iranian Sign Language Recognition (ISLR101)
 
-پروژه تشخیص زبان اشاره ایرانی به صورت **لحظه‌ای** با استفاده از وب‌کم.
+A real-time Iranian Sign Language recognition system using a webcam.
 
-مدل اصلی با معماری **BiGRU** روی دیتاست ISLR101 (۱۰۱ کلاس) آموزش دیده است.  
-در حالت real-time از **MediaPipe** برای استخراج نقاط کلیدی بدن و دست‌ها استفاده می‌شود و سپس با کالیبراسیون، ورودی به فضای مدل آموزش‌دیده نگاشت می‌شود.
-
----
-
-## ویژگی‌ها
-
-- تشخیص real-time زبان اشاره ایرانی
-- پشتیبانی از ۱۰۱ کلاس
-- کالیبراسیون خودکار برای هماهنگی بین MediaPipe و داده‌های آموزش
-- نمایش نتیجه به فارسی روی تصویر
-- امکان کنترل دستی شروع/پایان اشاره (کلید `m` و `SPACE`)
+The main model is trained with a **BiGRU** architecture on the ISLR101 dataset (101 classes).  
+In real-time mode, **MediaPipe** is used to extract body and hand keypoints, which are then mapped to the trained model's input space through calibration.
 
 ---
 
-## نصب
+## Features
+
+- Real-time Iranian Sign Language recognition
+- Support for 101 classes
+- Automatic calibration to align MediaPipe features with the training data space
+- Display results in Persian on the video frame
+- Manual control of sign start/end (using `m` and `SPACE` keys)
+
+---
+
+## Installation
 
 ```bash
-# کلون کردن پروژه
+# Clone the repository
 git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
 cd YOUR_REPO_NAME
 
-# ساخت محیط مجازی (پیشنهادی)
+# Create a virtual environment (recommended)
 python -m venv venv
 
-# ویندوز:
+# Windows:
 venv\Scripts\activate
 
-# لینوکس/مک:
+# Linux/Mac:
 source venv/bin/activate
 
-# نصب پکیج‌ها
+# Install dependencies
 pip install -r requirements.txt
-```
 
 ---
 
-## ساختار پروژه
+## Project Structure
 
-```text
-├── model.py                  # معماری BiGRU
-├── preprocessing.py          # پیش‌پردازش و DataLoader
-├── keypoint_extractor.py     # استخراج نقاط کلیدی با MediaPipe
-├── calibration.py            # کالیبراسیون فضای ویژگی
-├── input_spec.py             # مشخصات ورودی مدل
-├── train.py                  # آموزش مدل
-├── evaluate.py               # ارزیابی
-├── test.py                   # تست ساده
-├── realtime_inference.py     # موتور استنتاج real-time
-├── realtime_demo.py          # دموی زنده با وب‌کم
-├── audit_phase0.py           # بررسی داده‌ها
-└── fix_t5_phase1.py          # تست MediaPipe Tasks API
-```
+├── model.py                  # BiGRU model architecture
+├── preprocessing.py          # Preprocessing and DataLoader
+├── keypoint_extractor.py     # Keypoint extraction using MediaPipe
+├── calibration.py            # Feature space calibration
+├── input_spec.py             # Model input specifications
+├── train.py                  # Model training
+├── evaluate.py               # Evaluation
+├── test.py                   # Simple testing
+├── realtime_inference.py     # Real-time inference engine
+├── realtime_demo.py          # Live demo with webcam
+├── audit_phase0.py           # Data inspection
+└── fix_t5_phase1.py          # MediaPipe Tasks API test
 
 ---
 
-## نحوه استفاده (Real-time)
+## How to Use (Real-time)
 
-### ۱. کالیبراسیون (فقط یک بار)
+### 1. Calibration (only once)
 
-```bash
 python calibration.py
-```
 
-این اسکریپت فایل `checkpoints/calibration.json` را می‌سازد.
+This script generates the checkpoints/calibration.json file.
 
-### ۲. تست آفلاین (اختیاری)
+### 2. Offline Test (optional)
 
-```bash
 python realtime_inference.py
-```
 
-### ۳. اجرای دموی زنده
+### 3. Run Live Demo
 
-```bash
 python realtime_demo.py
-```
 
-**نکات مهم هنگام استفاده:**
+Important notes while using:
 
-- دست‌ها را پایین بیاورید → اشاره را انجام دهید → دوباره دست‌ها را پایین بیاورید.
-- اگر تشخیص شروع/پایان اشاره خوب کار نمی‌کند، کلید **`m`** را بزنید تا به حالت دستی بروید و با **`SPACE`** شروع و پایان هر اشاره را مشخص کنید.
-- اگر تصویر وب‌کم شما آینه‌ای است، داخل فایل `realtime_demo.py` این خط را تغییر دهید:
+- Lower your hands → perform the sign → lower your hands again.
+- If automatic start/end detection is not working well, press the `m` key to switch to manual mode, then use `SPACE` to mark the start and end of each sign.
+- If your webcam feed is mirrored, change this line inside realtime_demo.py:
 
-```python
 FRAME_IS_MIRRORED = True
+
+---
+
+## Requirements for Real-time
+
+- Webcam
+- MediaPipe models (downloaded automatically on first run)
+- Trained model checkpoint files (must be placed in the checkpoints/ folder)
+
+---
+
+## License
+
+This project is released for educational and research purposes.
 ```
-
----
-
-## پیش‌نیازها برای Real-time
-
-- وب‌کم
-- مدل‌های MediaPipe (اولین اجرا به صورت خودکار دانلود می‌شوند)
-- فایل‌های checkpoint مدل آموزش‌دیده (باید در پوشه `checkpoints/` قرار گیرند)
-
----
-
-## مجوز
-
-این پروژه برای اهداف آموزشی و تحقیقاتی منتشر شده است.
